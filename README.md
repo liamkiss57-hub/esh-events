@@ -1,36 +1,3 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, setDoc, getDocs, deleteDoc as firestoreDeleteDoc, orderBy } from 'firebase/firestore';
-
-// Global variables provided by the environment
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-// --- CONFIGURATION ---
-const ADMIN_PIN = "1234";
-
-// Helper to format Date
-const formatDateTime = (dateObj) => {
-  if (!(dateObj instanceof Date && !isNaN(dateObj))) return 'Invalid Date';
-  return dateObj.toLocaleDateString('en-US', { 
-    weekday: 'short', 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
-};
-
-// Modal Component for showing attendees
-const AttendeeModal = ({ eventTitle, attendeeIds, onClose }) => (
-  <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
-    <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6">
-      <div className="flex justify-between items-center border-b pb-3 mb-4">
-        <h3 className="text-2xl font-bold text-gray-800">Attendees for "{eventTitle}"</h3>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
